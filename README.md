@@ -41,7 +41,6 @@ Once features are extracted, the embedder is kept frozen. The system optimizes t
 ```bash
 python 02_train_classifier.py \
 --data_path "/Retinal_Features" \
---EPOCH 30 \
 --num_cls 4 
 ```
 
@@ -52,7 +51,6 @@ Here, the trained bag-level classifier acts as a teacher. Using a confidence-bas
 python3 03_train_embedder.py \
 --data_root "/path/to/OCT2017" \
 --checkpoint_path "model_best_oct.pth" \
---EPOCH 2 \
 --num_cls 4
 ```
 ---
