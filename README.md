@@ -30,7 +30,7 @@ The R2T-MIL model processes patient-level embedding bags for final classificatio
 ### 📂 Expected Data Structure
 
 ####  1️⃣ OCT
-
+```text
 data/
 └── oct/
 ├── train_data/
@@ -48,9 +48,10 @@ data/
 └── test_data/
 ├── features/
 └── label.csv
-
+```
 ####  2️⃣ CQ500
 
+```text
 data/
 └── cq500/
 └── CQ500_ICH_VS_NORMAL_MIL/
@@ -66,12 +67,10 @@ data/
 └── test/
 ├── features/
 └── label.csv
-
+```
 ---
 
 ### 🚀 Training & Evaluation
-
----
 
 #### 1️⃣ OCT Dataset
 
