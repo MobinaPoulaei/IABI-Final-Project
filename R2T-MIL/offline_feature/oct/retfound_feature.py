@@ -156,4 +156,4 @@ if __name__ == "__main__":
         )
 
     df = pd.DataFrame(records)
-    df.to_csv(os.path.join(label_path, "oct_labels.csv"), index=False)
+    df.to_csv(os.path.join(label_path, "label.csv"), index=False)

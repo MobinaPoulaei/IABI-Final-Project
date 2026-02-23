@@ -185,7 +185,7 @@ def main(meta_df: pd.DataFrame) -> None:
 
         # Save labels.csv
         df = pd.DataFrame(records, columns=["patient_id", "label"])
-        df.to_csv(os.path.join(split_dir, "labels.csv"), index=False)
+        df.to_csv(os.path.join(split_dir, "label.csv"), index=False)
 
 
 if __name__ == "__main__":
