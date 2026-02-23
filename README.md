@@ -6,6 +6,15 @@ The project follows a **Multiple Instance Learning (MIL)** paradigm, where each 
 
 ---
 
+## 📊 Supported Datasets
+
+| Dataset | Modality | Feature Extractor | Task | Classes |
+|----------|-----------|------------------|------|----------|
+| **OCT** | Retinal OCT Images | RETFound | 4-Class | CNV, DME, DRUSEN, NORMAL |
+| **CQ500** | Head CT | ResNet50 | Binary | ICH, NORMAL |
+
+---
+
 ## 🏗️ R2T-MIL Project Workflow
 
 The pipeline consists of two main stages:
@@ -15,6 +24,142 @@ High-dimensional medical images are converted into compact embeddings using pret
 
 ### 2️⃣ MIL Classification
 The R2T-MIL model processes patient-level embedding bags for final classification.
+
+---
+
+### 📂 Expected Data Structure
+
+####  1️⃣ OCT
+
+data/
+└── oct/
+├── train_data/
+│ ├── features/
+│ │ ├── CNV/
+│ │ │ ├── CNV-13823.pt
+│ │ │ └── ...
+│ │ ├── DME/
+│ │ ├── DRUSEN/
+│ │ └── NORMAL/
+│ └── label.csv
+├── val_data/
+│ ├── features/
+│ └── label.csv
+└── test_data/
+├── features/
+└── label.csv
+
+####  2️⃣ CQ500
+
+data/
+└── cq500/
+└── CQ500_ICH_VS_NORMAL_MIL/
+├── train/
+│ ├── features/
+│ │ ├── CQ500CT1.pt
+│ │ ├── CQ500CT2.pt
+│ │ └── ...
+│ └── label.csv
+├── val/
+│ ├── features/
+│ └── label.csv
+└── test/
+├── features/
+└── label.csv
+
+---
+
+### 🚀 Training & Evaluation
+
+---
+
+#### 1️⃣ OCT Dataset
+
+##### Training
+```bash
+python main.py \
+    --project mil_oct \
+    --datasets oct \
+    --dataset_root ./offline_feature/oct/train_data \
+    --model_path checkpoints \
+    --cv_fold 2 \
+    --model rrtmil \
+    --pool attn \
+    --n_trans_layers 2 \
+    --da_act tanh \
+    --title oct_rrtmil \
+    --epeg_k 15 \
+    --crmsa_k 1 \
+    --all_shortcut \
+    --seed 2026 \
+    --num_classes 4 \
+    --num_epoch 15 \
+    --loss ce \
+
+```
+##### Testing
+```bash
+python main.py \
+    --project mil_oct \
+    --datasets oct \
+    --dataset_root ./offline_feature/oct/test_data \
+    --model rrtmil \
+    --pool attn \
+    --n_trans_layers 2 \
+    --da_act tanh \
+    --title oct_rrtmil \
+    --epeg_k 15 \
+    --crmsa_k 1 \
+    --all_shortcut \
+    --seed 2026 \
+    --num_classes 4 \
+    --test_only \
+    --test_model_path ./checkpoints/mil_oct/oct_rrtmil/fold_0_model_best_auc.pt
+```
+
+#### 2️⃣ CQ500 Dataset
+
+##### Training 
+```bash
+python main.py \
+    --project mil_cq500 \
+    --datasets cq500 \
+    --dataset_root ./offline_features/cq500/CQ500_ICH_VS_NORMAL_MIL/train \
+    --model_path checkpoints \
+    --cv_fold 3 \
+    --model rrtmil \
+    --pool attn \
+    --n_trans_layers 2 \
+    --da_act tanh \
+    --title cq500_rrtmil \
+    --epeg_k 15 \
+    --crmsa_k 3 \
+    --all_shortcut \
+    --seed 2026 \
+    --num_classes 2 \
+    --num_epoch 15 \
+    --loss bce \
+```
+
+##### Testing
+```bash
+python main.py \
+    --project mil_cq500 \
+    --datasets ocq500t \
+    --dataset_root ./offline_feature/cq500/CQ500_ICH_VS_NORMAL_MIL/test_data \
+    --model rrtmil \
+    --pool attn \
+    --n_trans_layers 2 \
+    --da_act tanh \
+    --title cq500_rrtmil \
+    --epeg_k 15 \
+    --crmsa_k 3 \
+    --all_shortcut \
+    --seed 2026 \
+    --num_classes 2 \
+    --test_only \
+    --test_model_path ./checkpoints/mil_cq500/cq500_rrtmil/fold_0_model_best_auc.pt
+```
 
 ---
 
@@ -54,153 +199,3 @@ python3 03_train_embedder.py \
 --num_cls 4
 ```
 ---
-
-## 📊 Supported Datasets
-
-| Dataset | Modality | Feature Extractor | Task | Classes |
-|----------|-----------|------------------|------|----------|
-| **OCT** | Retinal OCT Images | RETFound | 4-Class | CNV, DME, DRUSEN, NORMAL |
-| **CQ500** | Head CT | ResNet50 | Binary | ICH, NORMAL |
-
----
-
-# 📂 Expected Data Structure
-
-##  1️⃣ OCT
-
-data/
-└── oct/
-├── train_data/
-│ ├── features/
-│ │ ├── CNV/
-│ │ │ ├── CNV-13823.pt
-│ │ │ └── ...
-│ │ ├── DME/
-│ │ ├── DRUSEN/
-│ │ └── NORMAL/
-│ └── label.csv
-├── val_data/
-│ ├── features/
-│ └── label.csv
-└── test_data/
-├── features/
-└── label.csv
-
-##  2️⃣ CQ500
-
-data/
-└── cq500/
-└── CQ500_ICH_VS_NORMAL_MIL/
-├── train/
-│ ├── features/
-│ │ ├── CQ500CT1.pt
-│ │ ├── CQ500CT2.pt
-│ │ └── ...
-│ └── label.csv
-├── val/
-│ ├── features/
-│ └── label.csv
-└── test/
-├── features/
-└── label.csv
-
-
-Notes:
-- Each `.pt` file corresponds to one patient.
-- Features are pre-extracted embeddings.
-- `label.csv` must contain:
-
----
-
-# 🚀 Training & Evaluation
-
----
-
-## 1️⃣ OCT Dataset
-
-### Training
-```bash
-python main.py \
-    --project mil_oct \
-    --datasets oct \
-    --dataset_root ./offline_feature/oct/train_data \
-    --model_path checkpoints \
-    --cv_fold 2 \
-    --model rrtmil \
-    --pool attn \
-    --n_trans_layers 2 \
-    --da_act tanh \
-    --title oct_rrtmil \
-    --epeg_k 15 \
-    --crmsa_k 1 \
-    --all_shortcut \
-    --seed 2026 \
-    --num_classes 4 \
-    --num_epoch 15 \
-    --loss ce \
-
-```
-
-### Testing
-```bash
-python main.py \
-    --project mil_oct \
-    --datasets oct \
-    --dataset_root ./offline_feature/oct/test_data \
-    --model rrtmil \
-    --pool attn \
-    --n_trans_layers 2 \
-    --da_act tanh \
-    --title oct_rrtmil \
-    --epeg_k 15 \
-    --crmsa_k 1 \
-    --all_shortcut \
-    --seed 2026 \
-    --num_classes 4 \
-    --test_only \
-    --test_model_path ./checkpoints/mil_oct/oct_rrtmil/fold_0_model_best_auc.pt
-```
-
-## 2️⃣ CQ500 Dataset
-
-### Training 
-```bash
-python main.py \
-    --project mil_cq500 \
-    --datasets cq500 \
-    --dataset_root ./offline_features/cq500/CQ500_ICH_VS_NORMAL_MIL/train \
-    --model_path checkpoints \
-    --cv_fold 3 \
-    --model rrtmil \
-    --pool attn \
-    --n_trans_layers 2 \
-    --da_act tanh \
-    --title cq500_rrtmil \
-    --epeg_k 15 \
-    --crmsa_k 3 \
-    --all_shortcut \
-    --seed 2026 \
-    --num_classes 2 \
-    --num_epoch 15 \
-    --loss bce \
-```
-
-### Testing
-```bash
-python main.py \
-    --project mil_cq500 \
-    --datasets ocq500t \
-    --dataset_root ./offline_feature/cq500/CQ500_ICH_VS_NORMAL_MIL/test_data \
-    --model rrtmil \
-    --pool attn \
-    --n_trans_layers 2 \
-    --da_act tanh \
-    --title cq500_rrtmil \
-    --epeg_k 15 \
-    --crmsa_k 3 \
-    --all_shortcut \
-    --seed 2026 \
-    --num_classes 2 \
-    --test_only \
-    --test_model_path ./checkpoints/mil_cq500/cq500_rrtmil/fold_0_model_best_auc.pt
-```
