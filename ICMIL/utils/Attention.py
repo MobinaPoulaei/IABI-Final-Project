@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.network import Classifier_1fc
+from utils.network import Classifier_1fc
 
 class Attention2(nn.Module):
     def __init__(self, L=512, D=128, K=1):
