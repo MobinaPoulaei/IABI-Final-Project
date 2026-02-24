@@ -1,7 +1,7 @@
-from model.network import Classifier_1fc, DimReduction
-from model.Attention import Attention_Gated as Attention
-from model.Attention import Attention_with_Classifier
-from model.feature_extraction import resnet50_baseline
+from utils.network import Classifier_1fc, DimReduction
+from utils.Attention import Attention_Gated as Attention
+from utils.Attention import Attention_with_Classifier
+from utils.feature_extraction import resnet50_baseline
 import argparse
 import torch
 import torchvision.models as models

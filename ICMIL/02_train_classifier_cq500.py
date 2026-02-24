@@ -1,12 +1,12 @@
-from model.network import Classifier_1fc, DimReduction
-from model.Attention import Attention_Gated as Attention
-from model.Attention import Attention_with_Classifier
+from utils.network import Classifier_1fc, DimReduction
+from utils.Attention import Attention_Gated as Attention
+from utils.Attention import Attention_with_Classifier
 import argparse
 import torch
 from utils.CQ500EmbededFeatsDataset import CQ500EmbededFeatsDataset
 from sklearn.metrics import roc_auc_score, f1_score, roc_curve
 import numpy as np
-from RandMixup import randmixup
+from utils.RandMixup import randmixup
 
 parser = argparse.ArgumentParser(description="CQ500 ICMIL Training")
 
