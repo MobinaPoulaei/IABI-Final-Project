@@ -174,7 +174,7 @@ The practical implementation of the ICMIL framework consists of three sequential
 ### 1️⃣ Feature Extraction
 In this initial stage, high-dimensional medical images (OCT scans) are processed using a backbone network to generate compact instance-level embeddings.
 ```bash
-python 01_extract_features.py \
+python 01_extract_features_retina_oct.py \
   --source_folder_dir '/path/to/OCT2017' \
   --save_folder_dir '/Retinal_Features' \
 ```
@@ -183,7 +183,7 @@ python 01_extract_features.py \
 Once features are extracted, the embedder is kept frozen. The system optimizes the bag-level classifier on the extracted feature bags.
 
 ```bash
-python 02_train_classifier.py \
+python 02_train_classifier_retina_oct.py \
 --data_path "/Retinal_Features" \
 --num_cls 4 
 ```
@@ -192,7 +192,7 @@ python 02_train_classifier.py \
 Here, the trained bag-level classifier acts as a teacher. Using a confidence-based mechanism, the system distills knowledge to fine-tune the instance-level embedder directly from the raw data.
 
 ```bash
-python3 03_train_embedder.py \
+python3 03_train_embedder_retina_oct.py \
 --data_root "/path/to/OCT2017" \
 --checkpoint_path "model_best_oct.pth" \
 --num_cls 4
